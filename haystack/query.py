@@ -80,7 +80,7 @@ class SearchQuerySet(object):
 
     def __len__(self):
         if self._result_count is None:
-            self._result_count = self.query.get_count()
+            self._result_count = self.query.get_count()['value']
 
             # Some backends give weird, false-y values here. Convert to zero.
             if not self._result_count:
@@ -243,11 +243,11 @@ class SearchQuerySet(object):
         # an array of 100,000 ``None``s consumed less than .5 Mb, which ought
         # to be an acceptable loss for consistent and more efficient caching.
         if len(self._result_cache) == 0:
-            self._result_cache = [None] * self.query.get_count()
+            self._result_cache = [None] * self.query.get_count()['value']
 
         fill_start, fill_end = start, end
         if fill_end is None:
-            fill_end = self.query.get_count()
+            fill_end = self.query.get_count()['value']
         cache_start = fill_start
 
         while True:
