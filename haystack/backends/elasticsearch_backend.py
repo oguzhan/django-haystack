@@ -555,6 +555,10 @@ class ElasticsearchSearchBackend(BaseSearchBackend):
             search_kwargs["size"] = end_offset - start_offset
 
         try:
+            # this is a hotfix done by ozzi.
+            # this is probably happening because of a version mismatch.
+            if 'query_string' in search_kwargs['query']:
+                search_kwargs['query']['query_string'].pop('auto_generate_phrase_queries', None)
             raw_results = self.conn.search(
                 body=search_kwargs,
                 index=self.index_name,
